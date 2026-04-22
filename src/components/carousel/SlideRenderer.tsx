@@ -203,6 +203,126 @@ function CTA({ slide, index, total }: Props) {
   );
 }
 
+/**
+ * Collage template — 2 background photos in duotone (deep blue + warm orange),
+ * a torn diagonal divider, big stencil-style title overlapping, plus an optional
+ * cut-out third image (e.g. a preacher) emerging from the bottom.
+ * Inspired by the "Culto da Família" reference.
+ */
+function Collage({ slide, index, total }: Props) {
+  const img1 = slide.image;
+  const img2 = slide.image2;
+  const cutout = slide.image3 ?? PREACHER_IMG;
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-deep">
+      {/* Two-pane diagonal collage */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute inset-0"
+          style={{ clipPath: "polygon(0 0, 60% 0, 52% 100%, 0 100%)" }}
+        >
+          {img1 && (
+            <img src={img1} alt="" className="absolute inset-0 h-full w-full object-cover grayscale" />
+          )}
+          {/* Blue duotone overlay */}
+          <div className="absolute inset-0 bg-[hsl(215_85%_18%)] mix-blend-multiply" />
+          <div className="absolute inset-0 bg-[hsl(205_90%_45%)] mix-blend-screen opacity-60" />
+        </div>
+        <div
+          className="absolute inset-0"
+          style={{ clipPath: "polygon(60% 0, 100% 0, 100% 100%, 52% 100%)" }}
+        >
+          {img2 && (
+            <img src={img2} alt="" className="absolute inset-0 h-full w-full object-cover grayscale" />
+          )}
+          {/* Orange duotone overlay */}
+          <div className="absolute inset-0 bg-[hsl(20_80%_30%)] mix-blend-multiply" />
+          <div className="absolute inset-0 bg-[hsl(28_95%_55%)] mix-blend-screen opacity-70" />
+        </div>
+        {/* Light leak / divider glow */}
+        <div
+          className="absolute inset-y-0"
+          style={{
+            left: "55%",
+            width: 6,
+            transform: "skewX(-6deg)",
+            background: "linear-gradient(180deg, transparent, hsl(35 95% 70% / 0.7), transparent)",
+            filter: "blur(6px)",
+          }}
+        />
+      </div>
+
+      {/* Vertical eyebrow on the left edge */}
+      {slide.eyebrow && (
+        <div
+          className="absolute left-10 top-1/2 -translate-y-1/2 font-sans-ui text-[20px] uppercase tracking-[0.5em] text-brand-cream/85"
+          style={{ writingMode: "vertical-rl", transform: "translateY(-50%) rotate(180deg)" }}
+        >
+          {slide.eyebrow}
+        </div>
+      )}
+
+      {/* Cutout subject (preacher) — bottom right, overflowing */}
+      {cutout && (
+        <img
+          src={cutout}
+          alt=""
+          className="absolute z-10 select-none pointer-events-none"
+          style={{
+            right: "-40px",
+            bottom: "-20px",
+            height: "78%",
+            width: "auto",
+            objectFit: "contain",
+            filter: "drop-shadow(-20px 20px 30px hsl(215 60% 8% / 0.5))",
+          }}
+        />
+      )}
+
+      {/* Stencil title — bottom-left, gigantic, slight rotation per line */}
+      <div className="absolute bottom-16 left-12 z-20 max-w-[68%]">
+        <StencilTitle text={slide.title ?? ""} />
+        {slide.body && (
+          <p className="mt-6 max-w-[460px] font-sans-ui text-[22px] leading-[1.4] text-brand-cream/90">
+            {slide.body}
+          </p>
+        )}
+      </div>
+
+      {/* Page number — light cream */}
+      <div className="absolute bottom-10 right-12 z-20 font-sans-ui text-[22px] tracking-[0.3em] text-brand-cream/70">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}
+
+function StencilTitle({ text }: { text: string }) {
+  // Split into words; render each on its own line with a slight rotation.
+  const words = text.split(/\s+/).filter(Boolean);
+  const rotations = [-3, 4, -2, 3, -1, 2];
+  return (
+    <div className="space-y-[-8px]">
+      {words.map((w, i) => (
+        <div
+          key={i}
+          className="font-serif-display italic font-extrabold uppercase text-brand-cream"
+          style={{
+            fontSize: words.length > 4 ? 110 : 150,
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
+            transform: `rotate(${rotations[i % rotations.length]}deg)`,
+            transformOrigin: "left center",
+            textShadow: "0 6px 24px hsl(215 60% 8% / 0.6)",
+            WebkitTextStroke: "1px hsl(40 45% 94% / 0.3)",
+          }}
+        >
+          {w}
+        </div>
+      ))}
+    </div>
+  );
+}
 export function SlideRenderer(props: Props) {
   const { slide } = props;
   switch (slide.template) {

@@ -41,6 +41,7 @@ const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   list: "Lista",
   split: "Foto / Texto",
   cta: "Chamada final",
+  collage: "Colagem (2 fotos)",
 };
 
 const newSlide = (template: SlideTemplate): Slide => {
@@ -58,6 +59,16 @@ const newSlide = (template: SlideTemplate): Slide => {
       return { ...base, eyebrow: "Capítulo", title: "Título lateral", body: "Texto de apoio.", image: STOCK_IMAGES[2].src };
     case "cta":
       return { ...base, eyebrow: "Compartilhe", title: "Marque alguém que precisa ver.", body: "Salve este post.", image: STOCK_IMAGES[3].src };
+    case "collage":
+      return {
+        ...base,
+        eyebrow: "Sua igreja",
+        title: "Culto da Família",
+        body: "Domingo · 19h · Auditório principal",
+        image: STOCK_IMAGES[4].src,
+        image2: STOCK_IMAGES[5].src,
+        image3: STOCK_IMAGES[6].src,
+      };
   }
 };
 
