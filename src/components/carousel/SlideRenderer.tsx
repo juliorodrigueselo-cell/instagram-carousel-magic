@@ -1,4 +1,4 @@
-import { Slide } from "@/lib/carousel-types";
+import { Slide, PREACHER_IMG } from "@/lib/carousel-types";
 
 interface Props {
   slide: Slide;
@@ -218,5 +218,7 @@ export function SlideRenderer(props: Props) {
       return <Split {...props} />;
     case "cta":
       return <CTA {...props} />;
+    case "collage":
+      return <Collage {...props} />;
   }
 }
