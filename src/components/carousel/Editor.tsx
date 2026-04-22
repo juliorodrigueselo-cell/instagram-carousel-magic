@@ -41,6 +41,7 @@ const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   list: "Lista",
   split: "Foto / Texto",
   cta: "Chamada final",
+  collage: "Colagem (2 fotos)",
 };
 
 const newSlide = (template: SlideTemplate): Slide => {
@@ -58,6 +59,16 @@ const newSlide = (template: SlideTemplate): Slide => {
       return { ...base, eyebrow: "Capítulo", title: "Título lateral", body: "Texto de apoio.", image: STOCK_IMAGES[2].src };
     case "cta":
       return { ...base, eyebrow: "Compartilhe", title: "Marque alguém que precisa ver.", body: "Salve este post.", image: STOCK_IMAGES[3].src };
+    case "collage":
+      return {
+        ...base,
+        eyebrow: "Sua igreja",
+        title: "Culto da Família",
+        body: "Domingo · 19h · Auditório principal",
+        image: STOCK_IMAGES[4].src,
+        image2: STOCK_IMAGES[5].src,
+        image3: STOCK_IMAGES[6].src,
+      };
   }
 };
 
@@ -318,39 +329,28 @@ export function Editor() {
             )}
 
             {active.template !== "verse" && active.template !== "list" && (
-              <div>
-                <Label className="flex items-center gap-2">
-                  <ImageIcon className="h-4 w-4" /> Imagem de fundo
-                </Label>
-                <div className="mt-2 grid grid-cols-4 gap-2">
-                  {STOCK_IMAGES.map((img) => (
-                    <button
-                      key={img.src}
-                      onClick={() => update({ image: img.src })}
-                      className={`overflow-hidden rounded border-2 transition ${
-                        active.image === img.src ? "border-primary" : "border-transparent hover:border-muted"
-                      }`}
-                    >
-                      <img src={img.src} alt={img.name} className="h-16 w-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-                <label className="mt-2 block">
-                  <span className="block text-xs text-muted-foreground mb-1">Ou envie sua imagem:</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = () => update({ image: reader.result as string });
-                      reader.readAsDataURL(file);
-                    }}
-                  />
-                </label>
-              </div>
+              <>
+                <ImageField
+                  label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
+                  value={active.image}
+                  onChange={(v) => update({ image: v })}
+                />
+                {active.template === "collage" && (
+                  <>
+                    <ImageField
+                      label="Foto direita (laranja)"
+                      value={active.image2}
+                      onChange={(v) => update({ image2: v })}
+                    />
+                    <ImageField
+                      label="Recorte em destaque (opcional)"
+                      value={active.image3}
+                      onChange={(v) => update({ image3: v })}
+                      hint="Use uma foto com fundo branco/transparente para o efeito de recorte."
+                    />
+                  </>
+                )}
+              </>
             )}
           </div>
 
@@ -396,6 +396,55 @@ export function Editor() {
           setActiveId(newSlides[0].id);
         }}
       />
+    </div>
+  );
+}
+
+function ImageField({
+  label,
+  value,
+  onChange,
+  hint,
+}: {
+  label: string;
+  value?: string;
+  onChange: (v: string) => void;
+  hint?: string;
+}) {
+  return (
+    <div>
+      <Label className="flex items-center gap-2">
+        <ImageIcon className="h-4 w-4" /> {label}
+      </Label>
+      <div className="mt-2 grid grid-cols-4 gap-2">
+        {STOCK_IMAGES.map((img) => (
+          <button
+            key={img.src}
+            onClick={() => onChange(img.src)}
+            className={`overflow-hidden rounded border-2 transition ${
+              value === img.src ? "border-primary" : "border-transparent hover:border-muted"
+            }`}
+          >
+            <img src={img.src} alt={img.name} className="h-16 w-full object-cover" />
+          </button>
+        ))}
+      </div>
+      <label className="mt-2 block">
+        <span className="block text-xs text-muted-foreground mb-1">Ou envie sua imagem:</span>
+        <input
+          type="file"
+          accept="image/*"
+          className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => onChange(reader.result as string);
+            reader.readAsDataURL(file);
+          }}
+        />
+      </label>
+      {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }
