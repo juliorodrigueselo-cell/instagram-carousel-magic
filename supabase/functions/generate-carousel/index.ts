@@ -1,4 +1,8 @@
-import { corsHeaders } from "@supabase/supabase-js/cors";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
 
 const SYSTEM_PROMPT = `Você é um pastor cristão brasileiro escrevendo um carrossel para Instagram com tom acolhedor, pastoral e bíblico. Use linguagem clara, próxima e com base bíblica. Seus textos são curtos, impactantes e cabem no formato vertical de um carrossel.
 
