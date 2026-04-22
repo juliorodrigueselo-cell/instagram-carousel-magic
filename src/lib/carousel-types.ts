@@ -2,6 +2,9 @@ import worship1 from "@/assets/worship-1.jpg";
 import worship2 from "@/assets/worship-2.jpg";
 import bible from "@/assets/bible.jpg";
 import cross from "@/assets/cross.jpg";
+import family1 from "@/assets/family-1.jpg";
+import family2 from "@/assets/family-2.jpg";
+import preacher from "@/assets/preacher.jpg";
 
 export type SlideTemplate =
   | "cover"
@@ -9,7 +12,8 @@ export type SlideTemplate =
   | "photo-quote"
   | "list"
   | "split"
-  | "cta";
+  | "cta"
+  | "collage";
 
 export interface Slide {
   id: string;
@@ -20,6 +24,8 @@ export interface Slide {
   reference?: string;
   author?: string;
   image?: string;
+  image2?: string;
+  image3?: string;
   items?: string[];
   accent?: "gold" | "cream" | "blue";
 }
@@ -29,7 +35,12 @@ export const STOCK_IMAGES = [
   { name: "Mãos levantadas", src: worship2 },
   { name: "Bíblia", src: bible },
   { name: "Cruz", src: cross },
+  { name: "Pai e bebê", src: family1 },
+  { name: "Abraço", src: family2 },
+  { name: "Pregador (recorte)", src: preacher },
 ];
+
+export const PREACHER_IMG = preacher;
 
 export const DEFAULT_SLIDES: Slide[] = [
   {
