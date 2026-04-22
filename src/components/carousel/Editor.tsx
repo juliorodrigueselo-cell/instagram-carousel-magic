@@ -29,8 +29,10 @@ import {
   ArrowUp,
   ArrowDown,
   Instagram,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { GenerateDialog } from "./GenerateDialog";
 
 const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   cover: "Capa",
@@ -63,6 +65,7 @@ export function Editor() {
   const [slides, setSlides] = useState<Slide[]>(DEFAULT_SLIDES);
   const [activeId, setActiveId] = useState(DEFAULT_SLIDES[0].id);
   const [exporting, setExporting] = useState(false);
+  const [genOpen, setGenOpen] = useState(false);
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   const active = slides.find((s) => s.id === activeId) ?? slides[0];
@@ -157,6 +160,14 @@ export function Editor() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setGenOpen(true)}
+            className="border-brand-gold text-brand-blue hover:bg-brand-gold/10"
+          >
+            <Sparkles className="mr-2 h-4 w-4 text-brand-gold" />
+            Gerar carrossel
+          </Button>
           <Select onValueChange={(v) => addSlide(v as SlideTemplate)}>
             <SelectTrigger className="w-[200px]">
               <Plus className="mr-2 h-4 w-4" />
@@ -376,6 +387,15 @@ export function Editor() {
           ))}
         </div>
       )}
+
+      <GenerateDialog
+        open={genOpen}
+        onOpenChange={setGenOpen}
+        onApply={(newSlides) => {
+          setSlides(newSlides);
+          setActiveId(newSlides[0].id);
+        }}
+      />
     </div>
   );
 }
