@@ -25,7 +25,7 @@ const TOOL = {
             properties: {
               template: {
                 type: "string",
-                enum: ["cover", "verse", "photo-quote", "list", "split", "cta"],
+                enum: ["cover", "verse", "photo-quote", "list", "split", "cta", "collage"],
               },
               eyebrow: { type: "string", description: "Categoria curta no topo (ex: 'Devocional', 'João 3:16'). Máx 30 caracteres." },
               title: { type: "string", description: "Frase principal do slide. Para versículos, é o texto do versículo. Máx 180 caracteres." },

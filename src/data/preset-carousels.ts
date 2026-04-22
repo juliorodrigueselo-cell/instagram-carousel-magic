@@ -1,6 +1,8 @@
 import { Slide, STOCK_IMAGES } from "@/lib/carousel-types";
 
-const [worship1, worship2, bible, cross] = STOCK_IMAGES.map((i) => i.src);
+const [worship1, worship2, bible, cross, family1, family2, preacher] = STOCK_IMAGES.map(
+  (i) => i.src,
+);
 
 export interface PresetCarousel {
   id: string;
@@ -60,6 +62,26 @@ export const PRESET_CAROUSELS: PresetCarousel[] = [
       { template: "list", eyebrow: "Pratique", title: "3 jeitos de cultivar gratidão", items: ["Anote 3 bênçãos antes de dormir.", "Agradeça em voz alta nas refeições.", "Diga obrigado a alguém todo dia."] },
       { template: "split", eyebrow: "Salmos 100:4", title: "Entrai pelas portas dele com louvor; e gratidão, nos seus átrios.", body: "A adoração começa quando o agradecer vira hábito.", image: cross },
       { template: "cta", eyebrow: "Compartilhe", title: "Pelo que você é grato hoje?", body: "Conte nos comentários e inspire alguém.", image: worship2 },
+    ],
+  },
+  {
+    id: "culto-familia",
+    name: "Culto da Família",
+    description: "Convite visual estilo colagem para evento da igreja.",
+    slides: [
+      {
+        template: "collage",
+        eyebrow: "AD CONCÓRDIA",
+        title: "Culto da Família",
+        body: "Domingo · 19h · Auditório principal",
+        image: family1,
+        image2: family2,
+        image3: preacher,
+      },
+      { template: "verse", eyebrow: "Josué 24:15", title: "Eu e a minha casa serviremos ao Senhor.", reference: "— Josué" },
+      { template: "photo-quote", eyebrow: "Reflexão", title: "Família que ora junta, permanece junta.", body: "Cada lar é um altar onde Deus quer habitar.", image: family1 },
+      { template: "list", eyebrow: "Você vai viver", title: "O que esperar do culto", items: ["Louvor para todas as idades.", "Palavra prática para o lar.", "Oração pelos casais e filhos."] },
+      { template: "cta", eyebrow: "Traga sua família", title: "Te esperamos no domingo.", body: "Marque alguém que você quer levar com você.", image: family2 },
     ],
   },
 ];
