@@ -4,7 +4,7 @@ import bible from "@/assets/bible.jpg";
 import cross from "@/assets/cross.jpg";
 import family1 from "@/assets/family-1.jpg";
 import family2 from "@/assets/family-2.jpg";
-import preacher from "@/assets/preacher.jpg";
+import preacher from "@/assets/preacher.png";
 
 export type SlideTemplate =
   | "cover"
