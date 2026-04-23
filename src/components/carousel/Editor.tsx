@@ -33,6 +33,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { GenerateDialog } from "./GenerateDialog";
+import { removeBackground, warmupBackgroundRemoval } from "@/lib/remove-bg";
+import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
 
 const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   cover: "Capa",
@@ -78,6 +81,11 @@ export function Editor() {
   const [exporting, setExporting] = useState(false);
   const [genOpen, setGenOpen] = useState(false);
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    // Pre-load the segmentation model so the first upload feels fast.
+    warmupBackgroundRemoval();
+  }, []);
 
   const active = slides.find((s) => s.id === activeId) ?? slides[0];
   const activeIndex = slides.findIndex((s) => s.id === activeId);
@@ -334,6 +342,7 @@ export function Editor() {
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
                   value={active.image}
                   onChange={(v) => update({ image: v })}
+                  defaultRemoveBg={false}
                 />
                 {active.template === "collage" && (
                   <>
@@ -341,12 +350,14 @@ export function Editor() {
                       label="Foto direita (laranja)"
                       value={active.image2}
                       onChange={(v) => update({ image2: v })}
+                      defaultRemoveBg={false}
                     />
                     <ImageField
                       label="Recorte em destaque (opcional)"
                       value={active.image3}
                       onChange={(v) => update({ image3: v })}
                       hint="Use uma foto com fundo branco/transparente para o efeito de recorte."
+                      defaultRemoveBg={true}
                     />
                   </>
                 )}
@@ -405,12 +416,42 @@ function ImageField({
   value,
   onChange,
   hint,
+  defaultRemoveBg = true,
 }: {
   label: string;
   value?: string;
   onChange: (v: string) => void;
   hint?: string;
+  defaultRemoveBg?: boolean;
 }) {
+  const [autoRemove, setAutoRemove] = useState(defaultRemoveBg);
+  const [processing, setProcessing] = useState(false);
+
+  const handleFile = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      if (!autoRemove) {
+        onChange(dataUrl);
+        return;
+      }
+      setProcessing(true);
+      const t = toast.loading("Removendo fundo da imagem…");
+      try {
+        const cutout = await removeBackground(dataUrl);
+        onChange(cutout);
+        toast.success("Fundo removido!", { id: t });
+      } catch (err) {
+        console.error(err);
+        toast.error("Não consegui remover o fundo. Usando a imagem original.", { id: t });
+        onChange(dataUrl);
+      } finally {
+        setProcessing(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div>
       <Label className="flex items-center gap-2">
@@ -429,18 +470,26 @@ function ImageField({
           </button>
         ))}
       </div>
+      <div className="mt-3 flex items-center justify-between rounded-md bg-muted/50 px-3 py-2">
+        <div>
+          <p className="text-xs font-medium text-foreground">Remover fundo automaticamente</p>
+          <p className="text-[11px] text-muted-foreground">Aplicado ao enviar uma foto sua</p>
+        </div>
+        <Switch checked={autoRemove} onCheckedChange={setAutoRemove} />
+      </div>
       <label className="mt-2 block">
-        <span className="block text-xs text-muted-foreground mb-1">Ou envie sua imagem:</span>
+        <span className="block text-xs text-muted-foreground mb-1">
+          {processing ? "Processando…" : "Ou envie sua imagem:"}
+        </span>
         <input
           type="file"
           accept="image/*"
-          className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground"
+          disabled={processing}
+          className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground disabled:opacity-50"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => onChange(reader.result as string);
-            reader.readAsDataURL(file);
+            if (file) void handleFile(file);
+            e.target.value = "";
           }}
         />
       </label>
