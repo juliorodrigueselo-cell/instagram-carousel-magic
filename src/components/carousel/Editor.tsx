@@ -413,12 +413,42 @@ function ImageField({
   value,
   onChange,
   hint,
+  defaultRemoveBg = true,
 }: {
   label: string;
   value?: string;
   onChange: (v: string) => void;
   hint?: string;
+  defaultRemoveBg?: boolean;
 }) {
+  const [autoRemove, setAutoRemove] = useState(defaultRemoveBg);
+  const [processing, setProcessing] = useState(false);
+
+  const handleFile = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      if (!autoRemove) {
+        onChange(dataUrl);
+        return;
+      }
+      setProcessing(true);
+      const t = toast.loading("Removendo fundo da imagem…");
+      try {
+        const cutout = await removeBackground(dataUrl);
+        onChange(cutout);
+        toast.success("Fundo removido!", { id: t });
+      } catch (err) {
+        console.error(err);
+        toast.error("Não consegui remover o fundo. Usando a imagem original.", { id: t });
+        onChange(dataUrl);
+      } finally {
+        setProcessing(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div>
       <Label className="flex items-center gap-2">
@@ -437,18 +467,26 @@ function ImageField({
           </button>
         ))}
       </div>
+      <div className="mt-3 flex items-center justify-between rounded-md bg-muted/50 px-3 py-2">
+        <div>
+          <p className="text-xs font-medium text-foreground">Remover fundo automaticamente</p>
+          <p className="text-[11px] text-muted-foreground">Aplicado ao enviar uma foto sua</p>
+        </div>
+        <Switch checked={autoRemove} onCheckedChange={setAutoRemove} />
+      </div>
       <label className="mt-2 block">
-        <span className="block text-xs text-muted-foreground mb-1">Ou envie sua imagem:</span>
+        <span className="block text-xs text-muted-foreground mb-1">
+          {processing ? "Processando…" : "Ou envie sua imagem:"}
+        </span>
         <input
           type="file"
           accept="image/*"
-          className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground"
+          disabled={processing}
+          className="block w-full text-xs file:mr-2 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground disabled:opacity-50"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => onChange(reader.result as string);
-            reader.readAsDataURL(file);
+            if (file) void handleFile(file);
+            e.target.value = "";
           }}
         />
       </label>
