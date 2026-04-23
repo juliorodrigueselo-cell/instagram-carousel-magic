@@ -33,6 +33,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { GenerateDialog } from "./GenerateDialog";
+import { removeBackground, warmupBackgroundRemoval } from "@/lib/remove-bg";
+import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
 
 const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   cover: "Capa",
@@ -78,6 +81,11 @@ export function Editor() {
   const [exporting, setExporting] = useState(false);
   const [genOpen, setGenOpen] = useState(false);
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    // Pre-load the segmentation model so the first upload feels fast.
+    warmupBackgroundRemoval();
+  }, []);
 
   const active = slides.find((s) => s.id === activeId) ?? slides[0];
   const activeIndex = slides.findIndex((s) => s.id === activeId);
