@@ -342,6 +342,7 @@ export function Editor() {
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
                   value={active.image}
                   onChange={(v) => update({ image: v })}
+                  defaultRemoveBg={false}
                 />
                 {active.template === "collage" && (
                   <>
@@ -349,12 +350,14 @@ export function Editor() {
                       label="Foto direita (laranja)"
                       value={active.image2}
                       onChange={(v) => update({ image2: v })}
+                      defaultRemoveBg={false}
                     />
                     <ImageField
                       label="Recorte em destaque (opcional)"
                       value={active.image3}
                       onChange={(v) => update({ image3: v })}
                       hint="Use uma foto com fundo branco/transparente para o efeito de recorte."
+                      defaultRemoveBg={true}
                     />
                   </>
                 )}
