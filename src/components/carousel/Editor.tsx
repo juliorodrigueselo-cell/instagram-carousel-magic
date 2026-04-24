@@ -49,6 +49,10 @@ const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   stat: "Número em destaque",
   "scripture-card": "Cartão de versículo",
   polaroid: "Polaroid",
+  magazine: "Capa de revista",
+  frame: "Foto emoldurada",
+  "big-number": "Lista numerada XL",
+  "gradient-quote": "Citação em gradiente",
 };
 
 const newSlide = (template: SlideTemplate): Slide => {
@@ -84,6 +88,14 @@ const newSlide = (template: SlideTemplate): Slide => {
       return { ...base, eyebrow: "Versículo do dia", title: "Tudo posso naquele que me fortalece.", reference: "Filipenses 4:13", body: "Salve este card pra lembrar nos dias difíceis." };
     case "polaroid":
       return { ...base, eyebrow: "Memória", title: "Deus está nos detalhes.", body: "Uma foto, um momento, uma gratidão.", image: STOCK_IMAGES[1].src };
+    case "magazine":
+      return { ...base, eyebrow: "Edição #07", title: "Fé que move montanhas", body: "Uma conversa sobre confiar quando tudo parece travar.", author: "Pr. Carlos Damasceno", image: STOCK_IMAGES[0].src };
+    case "frame":
+      return { ...base, eyebrow: "Hoje na Palavra", title: "O Senhor é a minha luz e a minha salvação.", reference: "Salmos 27:1", image: STOCK_IMAGES[2].src };
+    case "big-number":
+      return { ...base, eyebrow: "5 verdades", title: "Sobre a graça de Deus", items: ["Ela alcança quem não merece.", "Ela transforma quem aceita.", "Ela sustenta quem tropeça.", "Ela não tem prazo de validade.", "Ela é maior que o seu pior dia."] };
+    case "gradient-quote":
+      return { ...base, eyebrow: "Pra refletir", title: "A oração não muda Deus — muda quem ora.", reference: "— Søren Kierkegaard" };
   }
 };
 
@@ -311,7 +323,8 @@ export function Editor() {
               active.template === "cta" ||
               active.template === "stat" ||
               active.template === "scripture-card" ||
-              active.template === "polaroid") && (
+              active.template === "polaroid" ||
+              active.template === "magazine") && (
               <div>
                 <Label>Texto de apoio</Label>
                 <Textarea
@@ -325,7 +338,9 @@ export function Editor() {
 
             {(active.template === "verse" ||
               active.template === "bold-quote" ||
-              active.template === "scripture-card") && (
+              active.template === "scripture-card" ||
+              active.template === "frame" ||
+              active.template === "gradient-quote") && (
               <div>
                 <Label>Referência</Label>
                 <Input value={active.reference ?? ""} onChange={(e) => update({ reference: e.target.value })} />
@@ -354,14 +369,14 @@ export function Editor() {
               </>
             )}
 
-            {active.template === "cover" && (
+            {(active.template === "cover" || active.template === "magazine") && (
               <div>
                 <Label>Autor</Label>
                 <Input value={active.author ?? ""} onChange={(e) => update({ author: e.target.value })} />
               </div>
             )}
 
-            {active.template === "list" && (
+            {(active.template === "list" || active.template === "big-number") && (
               <div>
                 <Label>Itens (um por linha)</Label>
                 <Textarea
@@ -379,7 +394,9 @@ export function Editor() {
               active.template !== "list" &&
               active.template !== "bold-quote" &&
               active.template !== "stat" &&
-              active.template !== "scripture-card" && (
+              active.template !== "scripture-card" &&
+              active.template !== "big-number" &&
+              active.template !== "gradient-quote" && (
               <>
                 <ImageField
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}

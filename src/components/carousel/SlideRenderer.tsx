@@ -506,5 +506,181 @@ export function SlideRenderer(props: Props) {
       return <ScriptureCard {...props} />;
     case "polaroid":
       return <Polaroid {...props} />;
+    case "magazine":
+      return <Magazine {...props} />;
+    case "frame":
+      return <Frame {...props} />;
+    case "big-number":
+      return <BigNumber {...props} />;
+    case "gradient-quote":
+      return <GradientQuote {...props} />;
   }
+}
+
+/**
+ * Magazine — large editorial cover. Photo on top 60%, masthead label on top,
+ * big italic title at bottom over a cream block.
+ */
+function Magazine({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-cream">
+      {/* Top photo block */}
+      <div className="absolute inset-x-0 top-0 h-[62%] overflow-hidden bg-brand-deep">
+        {slide.image && (
+          <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/40 via-transparent to-brand-cream" />
+        {/* Masthead */}
+        <div className="absolute top-10 left-12 right-12 flex items-center justify-between">
+          <div className="font-serif-display italic text-brand-cream text-[42px] leading-none">
+            Fé<span className="text-brand-gold">.</span>
+          </div>
+          {slide.eyebrow && (
+            <div className="font-sans-ui uppercase tracking-[0.42em] text-brand-cream/85 text-[20px] border border-brand-cream/40 px-4 py-2">
+              {slide.eyebrow}
+            </div>
+          )}
+        </div>
+      </div>
+      {/* Bottom cream block with title */}
+      <div className="absolute inset-x-0 bottom-0 h-[42%] flex flex-col justify-end px-12 pb-16">
+        <h1 className="font-serif-display italic text-brand-ink text-[88px] leading-[0.95] text-balance max-w-[920px]">
+          {slide.title}
+        </h1>
+        {slide.body && (
+          <p className="mt-6 font-sans-ui text-[26px] leading-[1.4] text-brand-ink/70 max-w-[760px]">
+            {slide.body}
+          </p>
+        )}
+        {slide.author && (
+          <div className="mt-6 flex items-center gap-4">
+            <div className="h-px w-12 bg-brand-blue" />
+            <span className="font-sans-ui uppercase tracking-[0.32em] text-brand-blue text-[20px]">
+              {slide.author}
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="absolute bottom-10 right-12 z-10 font-sans-ui text-[22px] tracking-[0.3em] text-brand-ink/40">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Frame — photo centered inside a thin gold border with editorial caption below.
+ */
+function Frame({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-deep">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,hsl(210_85%_28%/0.7),transparent_70%)]" />
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-16">
+        <Eyebrow>{slide.eyebrow}</Eyebrow>
+        {/* Framed photo */}
+        <div className="mt-8 p-3 border border-brand-gold/60">
+          <div className="p-1 border border-brand-gold/40">
+            <div className="h-[700px] w-[820px] overflow-hidden bg-brand-ink/40">
+              {slide.image && (
+                <img src={slide.image} alt="" className="h-full w-full object-cover" />
+              )}
+            </div>
+          </div>
+        </div>
+        <p className="mt-10 font-serif-display italic text-brand-cream text-[48px] leading-[1.1] text-balance text-center max-w-[860px]">
+          {slide.title}
+        </p>
+        {slide.reference && (
+          <div className="mt-6 font-sans-ui uppercase tracking-[0.32em] text-brand-gold text-[20px]">
+            {slide.reference}
+          </div>
+        )}
+      </div>
+      <PageNumber index={index} total={total} />
+    </div>
+  );
+}
+
+/**
+ * BigNumber — list with massive outlined numerals in a dense editorial layout.
+ */
+function BigNumber({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-cream">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,hsl(42_95%_75%/0.4),transparent_55%)]" />
+      <div className="relative z-10 flex h-full flex-col p-16">
+        <Eyebrow dark>{slide.eyebrow}</Eyebrow>
+        <h2 className="mt-4 font-serif-display italic text-brand-ink text-[58px] leading-[1.05] text-balance max-w-[820px]">
+          {slide.title}
+        </h2>
+        <ul className="mt-10 flex-1 flex flex-col justify-around">
+          {slide.items?.slice(0, 5).map((it, i) => (
+            <li key={i} className="flex items-center gap-8 border-b border-brand-ink/15 pb-3">
+              <span
+                className="font-serif-display italic text-brand-blue leading-none"
+                style={{
+                  fontSize: 140,
+                  WebkitTextStroke: "2px hsl(var(--brand-blue))",
+                  WebkitTextFillColor: "transparent",
+                  width: 160,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="font-sans-ui text-brand-ink text-[28px] leading-[1.35] flex-1">
+                {it}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="absolute bottom-10 right-12 font-sans-ui text-[22px] tracking-[0.3em] text-brand-ink/40">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * GradientQuote — quote on a vibrant blue→gold gradient with subtle grain.
+ */
+function GradientQuote({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, hsl(215 80% 22%) 0%, hsl(210 70% 38%) 45%, hsl(35 90% 60%) 100%)",
+        }}
+      />
+      {/* Soft glow */}
+      <div className="absolute -top-40 -right-40 h-[700px] w-[700px] rounded-full bg-brand-gold/30 blur-3xl" />
+      <div className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full bg-brand-blue/40 blur-3xl" />
+      {/* Grain */}
+      <div
+        className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "repeating-radial-gradient(circle at 0 0, hsl(0 0% 100%) 0 1px, transparent 1px 3px)",
+        }}
+      />
+      <div className="relative z-10 flex h-full flex-col justify-center px-20">
+        <Eyebrow>{slide.eyebrow}</Eyebrow>
+        <p className="mt-10 font-serif-display italic text-brand-cream text-[82px] leading-[1.05] text-balance max-w-[900px]" style={{ textShadow: "0 4px 20px hsl(215 60% 8% / 0.4)" }}>
+          {slide.title}
+        </p>
+        {slide.reference && (
+          <div className="mt-12 flex items-center gap-4">
+            <div className="h-px w-16 bg-brand-cream" />
+            <span className="font-sans-ui uppercase tracking-[0.32em] text-brand-cream text-[22px]">
+              {slide.reference}
+            </span>
+          </div>
+        )}
+      </div>
+      <PageNumber index={index} total={total} />
+    </div>
+  );
 }
