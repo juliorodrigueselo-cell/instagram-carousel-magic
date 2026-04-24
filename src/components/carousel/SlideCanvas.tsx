@@ -50,6 +50,24 @@ export function SlideCanvas({
         className="slide-content"
       >
         <SlideRenderer slide={slide} index={index} total={total} format={format} />
+        <div
+          style={{
+            position: "absolute",
+            top: 24,
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            fontSize: 18,
+            letterSpacing: "0.2em",
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.85)",
+            textShadow: "0 1px 4px rgba(0,0,0,0.45)",
+            pointerEvents: "none",
+            zIndex: 10,
+          }}
+        >
+          SLIDE {index + 1} - ESCOLHA
+        </div>
       </div>
     );
   }
