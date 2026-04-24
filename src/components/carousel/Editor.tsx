@@ -323,7 +323,8 @@ export function Editor() {
               active.template === "cta" ||
               active.template === "stat" ||
               active.template === "scripture-card" ||
-              active.template === "polaroid") && (
+              active.template === "polaroid" ||
+              active.template === "magazine") && (
               <div>
                 <Label>Texto de apoio</Label>
                 <Textarea
@@ -337,7 +338,9 @@ export function Editor() {
 
             {(active.template === "verse" ||
               active.template === "bold-quote" ||
-              active.template === "scripture-card") && (
+              active.template === "scripture-card" ||
+              active.template === "frame" ||
+              active.template === "gradient-quote") && (
               <div>
                 <Label>Referência</Label>
                 <Input value={active.reference ?? ""} onChange={(e) => update({ reference: e.target.value })} />
@@ -366,14 +369,14 @@ export function Editor() {
               </>
             )}
 
-            {active.template === "cover" && (
+            {(active.template === "cover" || active.template === "magazine") && (
               <div>
                 <Label>Autor</Label>
                 <Input value={active.author ?? ""} onChange={(e) => update({ author: e.target.value })} />
               </div>
             )}
 
-            {active.template === "list" && (
+            {(active.template === "list" || active.template === "big-number") && (
               <div>
                 <Label>Itens (um por linha)</Label>
                 <Textarea
@@ -391,7 +394,9 @@ export function Editor() {
               active.template !== "list" &&
               active.template !== "bold-quote" &&
               active.template !== "stat" &&
-              active.template !== "scripture-card" && (
+              active.template !== "scripture-card" &&
+              active.template !== "big-number" &&
+              active.template !== "gradient-quote" && (
               <>
                 <ImageField
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
