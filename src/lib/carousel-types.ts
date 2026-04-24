@@ -17,7 +17,11 @@ export type SlideTemplate =
   | "bold-quote"
   | "stat"
   | "scripture-card"
-  | "polaroid";
+  | "polaroid"
+  | "magazine"
+  | "frame"
+  | "big-number"
+  | "gradient-quote";
 
 export interface Slide {
   id: string;
