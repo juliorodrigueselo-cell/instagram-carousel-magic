@@ -340,5 +340,13 @@ export function SlideRenderer(props: Props) {
       return <CTA {...props} />;
     case "collage":
       return <Collage {...props} />;
+    case "bold-quote":
+      return <BoldQuote {...props} />;
+    case "stat":
+      return <Stat {...props} />;
+    case "scripture-card":
+      return <ScriptureCard {...props} />;
+    case "polaroid":
+      return <Polaroid {...props} />;
   }
 }
