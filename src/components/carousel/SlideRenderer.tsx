@@ -506,5 +506,13 @@ export function SlideRenderer(props: Props) {
       return <ScriptureCard {...props} />;
     case "polaroid":
       return <Polaroid {...props} />;
+    case "magazine":
+      return <Magazine {...props} />;
+    case "frame":
+      return <Frame {...props} />;
+    case "big-number":
+      return <BigNumber {...props} />;
+    case "gradient-quote":
+      return <GradientQuote {...props} />;
   }
 }
