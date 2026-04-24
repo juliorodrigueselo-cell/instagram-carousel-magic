@@ -52,12 +52,12 @@ export const STOCK_IMAGES = [
 
 export const PREACHER_IMG = preacher;
 
-export type SlideFormat = "portrait" | "square" | "landscape";
+export type SlideFormat = "portrait" | "square" | "story";
 
 export const FORMAT_DIMS: Record<SlideFormat, { w: number; h: number; label: string }> = {
   portrait: { w: 1080, h: 1350, label: "Vertical · 1080×1350" },
   square: { w: 1080, h: 1080, label: "Quadrado · 1080×1080" },
-  landscape: { w: 1080, h: 1920, label: "Stories · 1080×1920" },
+  story: { w: 1080, h: 1920, label: "Stories · 1080×1920" },
 };
 
 export const DEFAULT_SLIDES: Slide[] = [
