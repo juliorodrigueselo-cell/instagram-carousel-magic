@@ -1,19 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { Slide } from "@/lib/carousel-types";
-import { SLIDE_H, SLIDE_W, SlideRenderer } from "./SlideRenderer";
+import { Slide, SlideFormat, FORMAT_DIMS } from "@/lib/carousel-types";
+import { SlideRenderer } from "./SlideRenderer";
 
 interface Props {
   slide: Slide;
   index: number;
   total: number;
-  /** When true, render at full 1080x1350 with no scale (used by exporter). */
+  /** When true, render at full size with no scale (used by exporter). */
   exportMode?: boolean;
   /** Wrapper className for sizing context. */
   className?: string;
   innerRef?: (el: HTMLDivElement | null) => void;
+  format?: SlideFormat;
 }
 
-export function SlideCanvas({ slide, index, total, exportMode, className, innerRef }: Props) {
+export function SlideCanvas({
+  slide,
+  index,
+  total,
+  exportMode,
+  className,
+  innerRef,
+  format = "portrait",
+}: Props) {
+  const { w: SLIDE_W, h: SLIDE_H } = FORMAT_DIMS[format];
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -30,7 +40,7 @@ export function SlideCanvas({ slide, index, total, exportMode, className, innerR
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [exportMode]);
+  }, [exportMode, SLIDE_W, SLIDE_H]);
 
   if (exportMode) {
     return (
@@ -39,7 +49,7 @@ export function SlideCanvas({ slide, index, total, exportMode, className, innerR
         style={{ width: SLIDE_W, height: SLIDE_H, position: "relative", overflow: "hidden" }}
         className="slide-content"
       >
-        <SlideRenderer slide={slide} index={index} total={total} />
+        <SlideRenderer slide={slide} index={index} total={total} format={format} />
       </div>
     );
   }
@@ -64,7 +74,7 @@ export function SlideCanvas({ slide, index, total, exportMode, className, innerR
         }}
         className="slide-content"
       >
-        <SlideRenderer slide={slide} index={index} total={total} />
+        <SlideRenderer slide={slide} index={index} total={total} format={format} />
       </div>
     </div>
   );
