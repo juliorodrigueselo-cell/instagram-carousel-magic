@@ -13,7 +13,11 @@ export type SlideTemplate =
   | "list"
   | "split"
   | "cta"
-  | "collage";
+  | "collage"
+  | "bold-quote"
+  | "stat"
+  | "scripture-card"
+  | "polaroid";
 
 export interface Slide {
   id: string;
@@ -28,6 +32,8 @@ export interface Slide {
   image3?: string;
   items?: string[];
   accent?: "gold" | "cream" | "blue";
+  stat?: string;
+  statLabel?: string;
 }
 
 export const STOCK_IMAGES = [

@@ -45,6 +45,10 @@ const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   split: "Foto / Texto",
   cta: "Chamada final",
   collage: "Colagem (2 fotos)",
+  "bold-quote": "Citação tipográfica",
+  stat: "Número em destaque",
+  "scripture-card": "Cartão de versículo",
+  polaroid: "Polaroid",
 };
 
 const newSlide = (template: SlideTemplate): Slide => {
@@ -72,6 +76,14 @@ const newSlide = (template: SlideTemplate): Slide => {
         image2: STOCK_IMAGES[5].src,
         image3: STOCK_IMAGES[6].src,
       };
+    case "bold-quote":
+      return { ...base, eyebrow: "Reflexão", title: "A fé não remove a tempestade — ela te leva pra dentro do barco com Cristo.", reference: "— Pr. Carlos" };
+    case "stat":
+      return { ...base, eyebrow: "Você sabia?", stat: "73%", statLabel: "dos cristãos não leem a Bíblia diariamente.", body: "E se hoje fosse o primeiro dia de uma nova história?" };
+    case "scripture-card":
+      return { ...base, eyebrow: "Versículo do dia", title: "Tudo posso naquele que me fortalece.", reference: "Filipenses 4:13", body: "Salve este card pra lembrar nos dias difíceis." };
+    case "polaroid":
+      return { ...base, eyebrow: "Memória", title: "Deus está nos detalhes.", body: "Uma foto, um momento, uma gratidão.", image: STOCK_IMAGES[1].src };
   }
 };
 
@@ -296,7 +308,10 @@ export function Editor() {
 
             {(active.template === "photo-quote" ||
               active.template === "split" ||
-              active.template === "cta") && (
+              active.template === "cta" ||
+              active.template === "stat" ||
+              active.template === "scripture-card" ||
+              active.template === "polaroid") && (
               <div>
                 <Label>Texto de apoio</Label>
                 <Textarea
@@ -308,11 +323,35 @@ export function Editor() {
               </div>
             )}
 
-            {active.template === "verse" && (
+            {(active.template === "verse" ||
+              active.template === "bold-quote" ||
+              active.template === "scripture-card") && (
               <div>
                 <Label>Referência</Label>
                 <Input value={active.reference ?? ""} onChange={(e) => update({ reference: e.target.value })} />
               </div>
+            )}
+
+            {active.template === "stat" && (
+              <>
+                <div>
+                  <Label>Número / estatística</Label>
+                  <Input
+                    value={active.stat ?? ""}
+                    onChange={(e) => update({ stat: e.target.value })}
+                    placeholder="73%"
+                  />
+                </div>
+                <div>
+                  <Label>Legenda do número</Label>
+                  <Textarea
+                    value={active.statLabel ?? ""}
+                    onChange={(e) => update({ statLabel: e.target.value })}
+                    rows={2}
+                    className="resize-none"
+                  />
+                </div>
+              </>
             )}
 
             {active.template === "cover" && (
@@ -336,7 +375,11 @@ export function Editor() {
               </div>
             )}
 
-            {active.template !== "verse" && active.template !== "list" && (
+            {active.template !== "verse" &&
+              active.template !== "list" &&
+              active.template !== "bold-quote" &&
+              active.template !== "stat" &&
+              active.template !== "scripture-card" && (
               <>
                 <ImageField
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
