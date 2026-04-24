@@ -1,17 +1,18 @@
-import { Slide, PREACHER_IMG } from "@/lib/carousel-types";
+import { Slide, PREACHER_IMG, SlideFormat, FORMAT_DIMS } from "@/lib/carousel-types";
 
 interface Props {
   slide: Slide;
   index: number;
   total: number;
+  format?: SlideFormat;
 }
 
 /**
- * Slides are always rendered at fixed 1080x1350 (Instagram portrait carousel).
- * The parent scales them via CSS transform.
+ * Default slide dimensions (Instagram portrait). The parent scales via CSS.
+ * Use FORMAT_DIMS[format] for other formats.
  */
-export const SLIDE_W = 1080;
-export const SLIDE_H = 1350;
+export const SLIDE_W = FORMAT_DIMS.portrait.w;
+export const SLIDE_H = FORMAT_DIMS.portrait.h;
 
 const PageNumber = ({ index, total }: { index: number; total: number }) => (
   <div className="absolute bottom-10 right-12 font-sans-ui text-[22px] tracking-[0.3em] text-brand-cream/70">

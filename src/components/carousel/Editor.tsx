@@ -6,9 +6,10 @@ import {
   Slide,
   SlideTemplate,
   STOCK_IMAGES,
+  SlideFormat,
+  FORMAT_DIMS,
 } from "@/lib/carousel-types";
 import { SlideCanvas } from "./SlideCanvas";
-import { SLIDE_H, SLIDE_W } from "./SlideRenderer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -104,7 +105,9 @@ export function Editor() {
   const [activeId, setActiveId] = useState(DEFAULT_SLIDES[0].id);
   const [exporting, setExporting] = useState(false);
   const [genOpen, setGenOpen] = useState(false);
+  const [format, setFormat] = useState<SlideFormat>("portrait");
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const dims = FORMAT_DIMS[format];
 
   useEffect(() => {
     // Pre-load the segmentation model so the first upload feels fast.
@@ -162,8 +165,8 @@ export function Editor() {
         const node = exportRefs.current.get(slides[i].id);
         if (!node) continue;
         const dataUrl = await toPng(node, {
-          width: SLIDE_W,
-          height: SLIDE_H,
+          width: dims.w,
+          height: dims.h,
           pixelRatio: 1,
           cacheBust: true,
           backgroundColor: "#0b1530",
@@ -199,10 +202,22 @@ export function Editor() {
           </div>
           <div>
             <h1 className="font-serif-display text-lg leading-none italic">Carrossel Fé</h1>
-            <p className="text-xs text-muted-foreground">Editor de carrosséis para Instagram · 1080×1350</p>
+            <p className="text-xs text-muted-foreground">Editor de carrosséis · {dims.w}×{dims.h}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Select value={format} onValueChange={(v) => setFormat(v as SlideFormat)}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(FORMAT_DIMS) as SlideFormat[]).map((f) => (
+                <SelectItem key={f} value={f}>
+                  {FORMAT_DIMS[f].label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button
             variant="outline"
             onClick={() => setGenOpen(true)}
@@ -246,7 +261,7 @@ export function Editor() {
                     s.id === activeId ? "border-primary shadow-md" : "border-transparent hover:border-muted"
                   }`}
                 >
-                  <SlideCanvas slide={s} index={i} total={slides.length} className="bg-muted" />
+                  <SlideCanvas slide={s} index={i} total={slides.length} className="bg-muted" format={format} />
                 </button>
                 <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                   <span>{String(i + 1).padStart(2, "0")} · {TEMPLATE_LABELS[s.template]}</span>
@@ -275,11 +290,11 @@ export function Editor() {
           <div
             className="h-full max-h-full w-auto rounded-lg"
             style={{
-              aspectRatio: `${SLIDE_W} / ${SLIDE_H}`,
+              aspectRatio: `${dims.w} / ${dims.h}`,
               boxShadow: "var(--shadow-slide)",
             }}
           >
-            <SlideCanvas slide={active} index={activeIndex} total={slides.length} className="rounded-lg" />
+            <SlideCanvas slide={active} index={activeIndex} total={slides.length} className="rounded-lg" format={format} />
           </div>
         </main>
 
@@ -427,7 +442,7 @@ export function Editor() {
 
           <div className="mt-8 rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
             <p className="font-semibold text-foreground mb-1">Dica</p>
-            Cada slide é exportado em 1080×1350 px — formato vertical do feed do Instagram. O carrossel inteiro vira um arquivo .zip pronto para postar.
+            Cada slide é exportado em {dims.w}×{dims.h} px — {dims.label.toLowerCase()}. O carrossel inteiro vira um arquivo .zip pronto para postar.
           </div>
         </aside>
       </div>
@@ -450,6 +465,7 @@ export function Editor() {
               index={i}
               total={slides.length}
               exportMode
+              format={format}
               innerRef={(el) => {
                 if (el) exportRefs.current.set(s.id, el);
                 else exportRefs.current.delete(s.id);
