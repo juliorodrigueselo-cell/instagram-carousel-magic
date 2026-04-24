@@ -105,7 +105,9 @@ export function Editor() {
   const [activeId, setActiveId] = useState(DEFAULT_SLIDES[0].id);
   const [exporting, setExporting] = useState(false);
   const [genOpen, setGenOpen] = useState(false);
+  const [format, setFormat] = useState<SlideFormat>("portrait");
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const dims = FORMAT_DIMS[format];
 
   useEffect(() => {
     // Pre-load the segmentation model so the first upload feels fast.
@@ -163,8 +165,8 @@ export function Editor() {
         const node = exportRefs.current.get(slides[i].id);
         if (!node) continue;
         const dataUrl = await toPng(node, {
-          width: SLIDE_W,
-          height: SLIDE_H,
+          width: dims.w,
+          height: dims.h,
           pixelRatio: 1,
           cacheBust: true,
           backgroundColor: "#0b1530",
