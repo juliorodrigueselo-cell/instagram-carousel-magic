@@ -301,7 +301,7 @@ export function Editor() {
         {/* Inspector */}
         <aside className="overflow-y-auto border-l border-border bg-card p-5">
           <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Slide {activeIndex + 1}
+            SLIDE {activeIndex + 1} - ESCOLHA
           </p>
           <h2 className="mb-5 font-serif-display text-2xl italic">{TEMPLATE_LABELS[active.template]}</h2>
 
