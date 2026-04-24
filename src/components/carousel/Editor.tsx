@@ -202,10 +202,22 @@ export function Editor() {
           </div>
           <div>
             <h1 className="font-serif-display text-lg leading-none italic">Carrossel Fé</h1>
-            <p className="text-xs text-muted-foreground">Editor de carrosséis para Instagram · 1080×1350</p>
+            <p className="text-xs text-muted-foreground">Editor de carrosséis · {dims.w}×{dims.h}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Select value={format} onValueChange={(v) => setFormat(v as SlideFormat)}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(FORMAT_DIMS) as SlideFormat[]).map((f) => (
+                <SelectItem key={f} value={f}>
+                  {FORMAT_DIMS[f].label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button
             variant="outline"
             onClick={() => setGenOpen(true)}
@@ -249,7 +261,7 @@ export function Editor() {
                     s.id === activeId ? "border-primary shadow-md" : "border-transparent hover:border-muted"
                   }`}
                 >
-                  <SlideCanvas slide={s} index={i} total={slides.length} className="bg-muted" />
+                  <SlideCanvas slide={s} index={i} total={slides.length} className="bg-muted" format={format} />
                 </button>
                 <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                   <span>{String(i + 1).padStart(2, "0")} · {TEMPLATE_LABELS[s.template]}</span>
@@ -278,11 +290,11 @@ export function Editor() {
           <div
             className="h-full max-h-full w-auto rounded-lg"
             style={{
-              aspectRatio: `${SLIDE_W} / ${SLIDE_H}`,
+              aspectRatio: `${dims.w} / ${dims.h}`,
               boxShadow: "var(--shadow-slide)",
             }}
           >
-            <SlideCanvas slide={active} index={activeIndex} total={slides.length} className="rounded-lg" />
+            <SlideCanvas slide={active} index={activeIndex} total={slides.length} className="rounded-lg" format={format} />
           </div>
         </main>
 
@@ -430,7 +442,7 @@ export function Editor() {
 
           <div className="mt-8 rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
             <p className="font-semibold text-foreground mb-1">Dica</p>
-            Cada slide é exportado em 1080×1350 px — formato vertical do feed do Instagram. O carrossel inteiro vira um arquivo .zip pronto para postar.
+            Cada slide é exportado em {dims.w}×{dims.h} px — {dims.label.toLowerCase()}. O carrossel inteiro vira um arquivo .zip pronto para postar.
           </div>
         </aside>
       </div>
