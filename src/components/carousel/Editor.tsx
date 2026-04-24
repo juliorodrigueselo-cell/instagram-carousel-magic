@@ -6,9 +6,10 @@ import {
   Slide,
   SlideTemplate,
   STOCK_IMAGES,
+  SlideFormat,
+  FORMAT_DIMS,
 } from "@/lib/carousel-types";
 import { SlideCanvas } from "./SlideCanvas";
-import { SLIDE_H, SLIDE_W } from "./SlideRenderer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
