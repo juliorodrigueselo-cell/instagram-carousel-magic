@@ -107,7 +107,7 @@ export function Editor() {
   const [genOpen, setGenOpen] = useState(false);
   const [format, setFormat] = useState<SlideFormat>("portrait");
   const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const dims = FORMAT_DIMS[format];
+  const dims = FORMAT_DIMS[format] ?? FORMAT_DIMS.portrait;
 
   useEffect(() => {
     // Pre-load the segmentation model so the first upload feels fast.
