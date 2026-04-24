@@ -45,6 +45,10 @@ const TEMPLATE_LABELS: Record<SlideTemplate, string> = {
   split: "Foto / Texto",
   cta: "Chamada final",
   collage: "Colagem (2 fotos)",
+  "bold-quote": "Citação tipográfica",
+  stat: "Número em destaque",
+  "scripture-card": "Cartão de versículo",
+  polaroid: "Polaroid",
 };
 
 const newSlide = (template: SlideTemplate): Slide => {
@@ -72,6 +76,14 @@ const newSlide = (template: SlideTemplate): Slide => {
         image2: STOCK_IMAGES[5].src,
         image3: STOCK_IMAGES[6].src,
       };
+    case "bold-quote":
+      return { ...base, eyebrow: "Reflexão", title: "A fé não remove a tempestade — ela te leva pra dentro do barco com Cristo.", reference: "— Pr. Carlos" };
+    case "stat":
+      return { ...base, eyebrow: "Você sabia?", stat: "73%", statLabel: "dos cristãos não leem a Bíblia diariamente.", body: "E se hoje fosse o primeiro dia de uma nova história?" };
+    case "scripture-card":
+      return { ...base, eyebrow: "Versículo do dia", title: "Tudo posso naquele que me fortalece.", reference: "Filipenses 4:13", body: "Salve este card pra lembrar nos dias difíceis." };
+    case "polaroid":
+      return { ...base, eyebrow: "Memória", title: "Deus está nos detalhes.", body: "Uma foto, um momento, uma gratidão.", image: STOCK_IMAGES[1].src };
   }
 };
 
