@@ -465,6 +465,7 @@ export function Editor() {
               index={i}
               total={slides.length}
               exportMode
+              format={format}
               innerRef={(el) => {
                 if (el) exportRefs.current.set(s.id, el);
                 else exportRefs.current.delete(s.id);
