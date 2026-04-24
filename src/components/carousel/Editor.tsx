@@ -375,7 +375,11 @@ export function Editor() {
               </div>
             )}
 
-            {active.template !== "verse" && active.template !== "list" && (
+            {active.template !== "verse" &&
+              active.template !== "list" &&
+              active.template !== "bold-quote" &&
+              active.template !== "stat" &&
+              active.template !== "scripture-card" && (
               <>
                 <ImageField
                   label={active.template === "collage" ? "Foto esquerda (azul)" : "Imagem de fundo"}
