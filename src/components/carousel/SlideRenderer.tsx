@@ -323,6 +323,164 @@ function StencilTitle({ text }: { text: string }) {
     </div>
   );
 }
+
+/**
+ * Bold Quote — typographic-only slide. Massive italic quote on cream background
+ * with a giant decorative quotation mark and signature line.
+ */
+function BoldQuote({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-ink">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,hsl(210_85%_22%/0.7),transparent_60%)]" />
+      <div className="absolute -left-8 top-[60px] font-serif-display text-[640px] leading-none text-brand-gold/20 select-none">
+        “
+      </div>
+      <div className="relative z-10 flex h-full flex-col justify-center px-20">
+        <Eyebrow>{slide.eyebrow}</Eyebrow>
+        <p className="mt-10 font-serif-display italic text-brand-cream text-[88px] leading-[1.02] text-balance max-w-[920px]">
+          {slide.title}
+        </p>
+        {slide.reference && (
+          <div className="mt-14 flex items-center gap-4">
+            <div className="h-px w-20 bg-brand-gold" />
+            <span className="font-sans-ui uppercase tracking-[0.32em] text-brand-gold text-[24px]">
+              {slide.reference}
+            </span>
+          </div>
+        )}
+      </div>
+      <PageNumber index={index} total={total} />
+    </div>
+  );
+}
+
+/**
+ * Stat — huge number/statistic with a short caption underneath. Editorial style.
+ */
+function Stat({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-cream">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_85%,hsl(42_95%_75%/0.5),transparent_55%)]" />
+      {/* Vertical accent bar */}
+      <div className="absolute left-12 top-16 bottom-16 w-[3px] bg-brand-gold/70" />
+      <div className="relative z-10 flex h-full flex-col justify-center px-20 pl-24">
+        <Eyebrow dark>{slide.eyebrow}</Eyebrow>
+        <div
+          className="mt-6 font-serif-display italic text-brand-blue leading-[0.85] text-balance"
+          style={{
+            fontSize: (slide.stat ?? "").length > 4 ? 320 : 420,
+            letterSpacing: "-0.04em",
+          }}
+        >
+          {slide.stat || "0%"}
+        </div>
+        {slide.statLabel && (
+          <p className="mt-8 font-serif-display italic text-brand-ink text-[44px] leading-[1.1] max-w-[760px] text-balance">
+            {slide.statLabel}
+          </p>
+        )}
+        {slide.body && (
+          <p className="mt-6 font-sans-ui text-[24px] leading-[1.5] text-brand-ink/70 max-w-[700px]">
+            {slide.body}
+          </p>
+        )}
+      </div>
+      <div className="absolute bottom-10 right-12 font-sans-ui text-[22px] tracking-[0.3em] text-brand-ink/40">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Scripture Card — elegant framed card on a dark background, like a printed
+ * memory verse. Reference at the top in small caps, verse in italic serif.
+ */
+function ScriptureCard({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-deep">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(210_85%_28%/0.7),transparent_70%)]" />
+      {/* Inner card */}
+      <div className="absolute inset-[80px] rounded-[8px] bg-brand-cream flex flex-col">
+        {/* Top double-line frame */}
+        <div className="mx-12 mt-12 border-t-2 border-b border-brand-blue/40 py-4 text-center">
+          <div className="font-sans-ui uppercase tracking-[0.42em] text-brand-blue text-[22px]">
+            {slide.reference || slide.eyebrow || "Versículo"}
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col justify-center px-14 text-center">
+          <p className="font-serif-display italic text-brand-ink text-[64px] leading-[1.05] text-balance">
+            “{slide.title}”
+          </p>
+          {slide.body && (
+            <p className="mt-10 font-sans-ui text-[22px] leading-[1.5] text-brand-ink/65 max-w-[640px] mx-auto">
+              {slide.body}
+            </p>
+          )}
+        </div>
+        {/* Bottom ornament */}
+        <div className="mx-auto mb-12 flex items-center gap-4">
+          <div className="h-px w-12 bg-brand-gold" />
+          <span className="font-serif-display italic text-brand-gold text-[28px]">✦</span>
+          <div className="h-px w-12 bg-brand-gold" />
+        </div>
+      </div>
+      <PageNumber index={index} total={total} />
+    </div>
+  );
+}
+
+/**
+ * Polaroid — single photo styled as a polaroid, slightly rotated, taped to a
+ * textured paper background. Caption underneath in handwritten-style italic.
+ */
+function Polaroid({ slide, index, total }: Props) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-brand-cream">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,hsl(42_60%_80%/0.45),transparent_60%)]" />
+      {/* Subtle paper grain via repeating gradient */}
+      <div
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(45deg, hsl(30 40% 30%) 0 1px, transparent 1px 6px)",
+        }}
+      />
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-12">
+        <Eyebrow dark>{slide.eyebrow}</Eyebrow>
+
+        <div
+          className="mt-10 bg-white p-6 pb-20 shadow-[0_30px_60px_-20px_hsl(215_60%_15%/0.35)]"
+          style={{ transform: "rotate(-3deg)" }}
+        >
+          {/* Tape */}
+          <div
+            className="absolute -top-4 left-1/2 h-10 w-32 bg-brand-gold/60"
+            style={{ transform: "translateX(-50%) rotate(-4deg)", filter: "blur(0.3px)" }}
+          />
+          <div className="h-[640px] w-[640px] overflow-hidden bg-brand-ink/10">
+            {slide.image && (
+              <img src={slide.image} alt="" className="h-full w-full object-cover" />
+            )}
+          </div>
+          <p className="mt-8 text-center font-serif-display italic text-brand-ink text-[40px] leading-[1.1] text-balance px-4">
+            {slide.title}
+          </p>
+        </div>
+
+        {slide.body && (
+          <p className="mt-8 max-w-[680px] text-center font-sans-ui text-[22px] leading-[1.5] text-brand-ink/70">
+            {slide.body}
+          </p>
+        )}
+      </div>
+      <div className="absolute bottom-10 right-12 font-sans-ui text-[22px] tracking-[0.3em] text-brand-ink/40">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}
+
 export function SlideRenderer(props: Props) {
   const { slide } = props;
   switch (slide.template) {
