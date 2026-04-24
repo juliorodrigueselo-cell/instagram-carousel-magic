@@ -308,7 +308,10 @@ export function Editor() {
 
             {(active.template === "photo-quote" ||
               active.template === "split" ||
-              active.template === "cta") && (
+              active.template === "cta" ||
+              active.template === "stat" ||
+              active.template === "scripture-card" ||
+              active.template === "polaroid") && (
               <div>
                 <Label>Texto de apoio</Label>
                 <Textarea
@@ -320,11 +323,35 @@ export function Editor() {
               </div>
             )}
 
-            {active.template === "verse" && (
+            {(active.template === "verse" ||
+              active.template === "bold-quote" ||
+              active.template === "scripture-card") && (
               <div>
                 <Label>Referência</Label>
                 <Input value={active.reference ?? ""} onChange={(e) => update({ reference: e.target.value })} />
               </div>
+            )}
+
+            {active.template === "stat" && (
+              <>
+                <div>
+                  <Label>Número / estatística</Label>
+                  <Input
+                    value={active.stat ?? ""}
+                    onChange={(e) => update({ stat: e.target.value })}
+                    placeholder="73%"
+                  />
+                </div>
+                <div>
+                  <Label>Legenda do número</Label>
+                  <Textarea
+                    value={active.statLabel ?? ""}
+                    onChange={(e) => update({ statLabel: e.target.value })}
+                    rows={2}
+                    className="resize-none"
+                  />
+                </div>
+              </>
             )}
 
             {active.template === "cover" && (
